@@ -1,5 +1,7 @@
 [![Build Status](https://travis-ci.org/daedafusion/cache.svg?branch=master)](https://travis-ci.org/daedafusion/cache)
 
+[![Coverage Status](https://coveralls.io/repos/github/daedafusion/cache/badge.svg?branch=master)](https://coveralls.io/github/daedafusion/cache?branch=master)
+
 # cache
 
 Pluggable cache framework using [Service Framework](https://github.com/daedafusion/service-framework)
