@@ -15,6 +15,14 @@ public interface Cache<K, V> extends Closeable
     void put(K key, V value);
 
     /**
+     * Store key/value with custom ttl
+     * @param key
+     * @param value
+     * @param ttl
+     */
+    void put(K key, V value, int ttl);
+
+    /**
      * Retrieve key/value pair
      * @param key
      * @return value associated with key

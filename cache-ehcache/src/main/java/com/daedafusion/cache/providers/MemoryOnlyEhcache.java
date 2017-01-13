@@ -20,23 +20,65 @@ public class MemoryOnlyEhcache<K, V> implements Cache<K, V>
 
     private Ehcache cache;
 
-    public MemoryOnlyEhcache(String size, String namePrefix)
+    public static class Builder
     {
-        CacheConfiguration config = new CacheConfiguration();
-        config.setMaxBytesLocalHeap(size);
-        config.persistence(new PersistenceConfiguration().strategy(PersistenceConfiguration.Strategy.NONE));
-        config.setMemoryStoreEvictionPolicy("LRU");
-        config.eternal(true);
-        config.setName(String.format("%s-%s", namePrefix, UUID.randomUUID().toString()));
+        private String name;
+        private String size;
+        private Long ttl;
 
-        cache = new net.sf.ehcache.Cache(config);
-        CacheManager.getInstance().addCache(cache);
+        public Builder(String name)
+        {
+            this.name = name;
+        }
+
+        public Builder size(String size)
+        {
+            this.size = size;
+            return this;
+        }
+
+        public Builder ttl(Long ttl)
+        {
+            this.ttl = ttl;
+            return this;
+        }
+
+        public MemoryOnlyEhcache build(){
+            CacheConfiguration config = new CacheConfiguration();
+            config.setMaxBytesLocalHeap(this.size != null ? this.size : "20M");
+            if(this.ttl != null)
+            {
+                config.setTimeToLiveSeconds(this.ttl);
+            }
+            config.persistence(new PersistenceConfiguration().strategy(PersistenceConfiguration.Strategy.NONE));
+            config.setMemoryStoreEvictionPolicy("LRU");
+
+            config.setName(String.format("%s-%s", this.name, UUID.randomUUID().toString()));
+
+            net.sf.ehcache.Cache cache = new net.sf.ehcache.Cache(config);
+            CacheManager.getInstance().addCache(cache);
+
+            return new MemoryOnlyEhcache(cache);
+        }
+    }
+
+    MemoryOnlyEhcache(Ehcache cache)
+    {
+        this.cache = cache;
     }
 
     @Override
     public void put(K key, V value)
     {
         cache.put(new Element(key, value));
+    }
+
+    @Override
+    public void put(K key, V value, int ttl)
+    {
+        Element e = new Element(key, value);
+        e.setTimeToLive(ttl);
+        cache.put(e);
     }
 
     @Override
