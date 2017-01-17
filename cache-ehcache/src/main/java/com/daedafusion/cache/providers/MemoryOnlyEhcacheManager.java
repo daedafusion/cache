@@ -45,17 +45,16 @@ public class MemoryOnlyEhcacheManager extends AbstractProvider implements CacheM
             @Override
             public void teardown()
             {
-                for(Cache c : map.values())
-                {
+                map.values().forEach(cache -> {
                     try
                     {
-                        c.close();
+                        cache.close();
                     }
                     catch (IOException e)
                     {
                         log.warn("", e);
                     }
-                }
+                });
 
                 map.clear();
             }
@@ -69,7 +68,16 @@ public class MemoryOnlyEhcacheManager extends AbstractProvider implements CacheM
         {
             if(!map.containsKey(name))
             {
-                map.put(name, new MemoryOnlyEhcache(getProperty(name, "20M"), name));
+                MemoryOnlyEhcache.Builder builder = new MemoryOnlyEhcache.Builder(name);
+                if(getProperty(String.format("%s.size", name)) != null)
+                {
+                    builder.size(getProperty(String.format("%s.size", name)));
+                }
+                if(getProperty(String.format("%s.ttl", name)) != null)
+                {
+                    builder.ttl(Long.parseLong(String.format("%s.ttl", name)));
+                }
+                map.put(name, builder.build());
             }
 
             return map.get(name);
