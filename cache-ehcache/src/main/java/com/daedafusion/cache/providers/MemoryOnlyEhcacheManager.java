@@ -75,7 +75,7 @@ public class MemoryOnlyEhcacheManager extends AbstractProvider implements CacheM
                 }
                 if(getProperty(String.format("%s.ttl", name)) != null)
                 {
-                    builder.ttl(Long.parseLong(String.format("%s.ttl", name)));
+                    builder.ttl(Long.parseLong(getProperty(String.format("%s.ttl", name))));
                 }
                 map.put(name, builder.build());
             }
