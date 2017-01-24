@@ -22,13 +22,17 @@ public class RedisCache implements Cache<String, String>
         this.cacheName = cacheName;
     }
 
+    private String getPrefixedKey(String key)
+    {
+        return String.format("%s:%s", cacheName, key);
+    }
 
     @Override
     public void put(String key, String value)
     {
         try(Jedis jedis = pool.getResource())
         {
-            jedis.set(String.format("%s:%s", cacheName, key), value);
+            jedis.set(getPrefixedKey(key), value);
         }
     }
 
@@ -37,8 +41,8 @@ public class RedisCache implements Cache<String, String>
     {
         try(Jedis jedis = pool.getResource())
         {
-            jedis.set(String.format("%s:%s", cacheName, key), value);
-            jedis.expire(String.format("%s:%s", cacheName, key), ttl);
+            jedis.set(getPrefixedKey(key), value);
+            jedis.expire(getPrefixedKey(key), ttl);
         }
     }
 
@@ -47,7 +51,7 @@ public class RedisCache implements Cache<String, String>
     {
         try(Jedis jedis = pool.getResource())
         {
-            return jedis.get(String.format("%s:%s", cacheName, key));
+            return jedis.get(getPrefixedKey(key));
         }
     }
 
@@ -56,7 +60,7 @@ public class RedisCache implements Cache<String, String>
     {
         try(Jedis jedis = pool.getResource())
         {
-            return jedis.get(String.format("%s:%s", cacheName, key)) != null;
+            return jedis.get(getPrefixedKey(key)) != null;
         }
     }
 
