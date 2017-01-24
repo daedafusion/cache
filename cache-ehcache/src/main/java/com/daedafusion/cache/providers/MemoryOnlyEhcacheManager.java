@@ -1,6 +1,7 @@
 package com.daedafusion.cache.providers;
 
 import com.daedafusion.cache.Cache;
+import com.daedafusion.configuration.Configuration;
 import com.daedafusion.sf.AbstractProvider;
 import com.daedafusion.sf.LifecycleListener;
 import org.apache.log4j.Logger;
@@ -69,11 +70,11 @@ public class MemoryOnlyEhcacheManager extends AbstractProvider implements CacheM
             if(!map.containsKey(name))
             {
                 MemoryOnlyEhcache.Builder builder = new MemoryOnlyEhcache.Builder(name);
-                if(getProperty(String.format("%s.size", name)) != null)
+                if(Configuration.getInstance().getString(String.format("cache.%s.size", name), getProperty(String.format("%s.size", name))) != null)
                 {
                     builder.size(getProperty(String.format("%s.size", name)));
                 }
-                if(getProperty(String.format("%s.ttl", name)) != null)
+                if(Configuration.getInstance().getString(String.format("cache.%s.ttl", name), getProperty(String.format("%s.ttl", name))) != null)
                 {
                     builder.ttl(Long.parseLong(getProperty(String.format("%s.ttl", name))));
                 }
@@ -82,5 +83,17 @@ public class MemoryOnlyEhcacheManager extends AbstractProvider implements CacheM
 
             return map.get(name);
         }
+    }
+
+    @Override
+    public boolean hasCache(String name)
+    {
+        return map.containsKey(name) || getProperty(name) != null;
+    }
+
+    @Override
+    public boolean isDefaultProvider()
+    {
+        return Boolean.parseBoolean(getProperty("defaultProvider", "true"));
     }
 }

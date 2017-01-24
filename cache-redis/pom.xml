@@ -10,7 +10,7 @@
         <version>1.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>cache-ehcache</artifactId>
+    <artifactId>cache-redis</artifactId>
 
     <dependencies>
         <dependency>
@@ -18,8 +18,8 @@
             <artifactId>cache-core</artifactId>
         </dependency>
         <dependency>
-            <groupId>net.sf.ehcache</groupId>
-            <artifactId>ehcache</artifactId>
+            <groupId>redis.clients</groupId>
+            <artifactId>jedis</artifactId>
         </dependency>
         <dependency>
             <groupId>com.daedafusion</groupId>
