@@ -14,10 +14,12 @@ public class RedisCache implements Cache<String, String>
 {
     private static final Logger log = Logger.getLogger(RedisCache.class);
     private final JedisPool pool;
+    private final String cacheName;
 
-    public RedisCache(JedisPool pool)
+    public RedisCache(JedisPool pool, String cacheName)
     {
         this.pool = pool;
+        this.cacheName = cacheName;
     }
 
 
@@ -26,7 +28,7 @@ public class RedisCache implements Cache<String, String>
     {
         try(Jedis jedis = pool.getResource())
         {
-            jedis.set(key, value);
+            jedis.set(String.format("%s:%s", cacheName, key), value);
         }
     }
 
@@ -35,8 +37,8 @@ public class RedisCache implements Cache<String, String>
     {
         try(Jedis jedis = pool.getResource())
         {
-            jedis.set(key, value);
-            jedis.expire(key, ttl);
+            jedis.set(String.format("%s:%s", cacheName, key), value);
+            jedis.expire(String.format("%s:%s", cacheName, key), ttl);
         }
     }
 
@@ -45,7 +47,7 @@ public class RedisCache implements Cache<String, String>
     {
         try(Jedis jedis = pool.getResource())
         {
-            return jedis.get(key);
+            return jedis.get(String.format("%s:%s", cacheName, key));
         }
     }
 
@@ -54,7 +56,7 @@ public class RedisCache implements Cache<String, String>
     {
         try(Jedis jedis = pool.getResource())
         {
-            return jedis.get(key) != null;
+            return jedis.get(String.format("%s:%s", cacheName, key)) != null;
         }
     }
 

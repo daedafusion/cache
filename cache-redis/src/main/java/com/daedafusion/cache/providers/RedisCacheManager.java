@@ -56,7 +56,7 @@ public class RedisCacheManager extends AbstractProvider implements CacheManagerP
     @Override
     public Cache getCache(String name)
     {
-        return null;
+        return new RedisCache(pool, name);
     }
 
     @Override
