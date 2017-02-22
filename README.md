@@ -12,7 +12,7 @@ Pluggable cache framework using [Service Framework](https://github.com/daedafusi
 <dependency>
     <groupId>com.daedafusion</groupId>
     <artifactId>cache-core</artifactId>
-    <version>1.0</version>
+    <version>1.1</version>
 </dependency>
 ```
 
@@ -26,7 +26,7 @@ Pluggable cache framework using [Service Framework](https://github.com/daedafusi
 <dependency>
     <groupId>com.daedafusion</groupId>
     <artifactId>cache-ehcache</artifactId>
-    <version>1.0</version>
+    <version>1.1</version>
     <classifier>plugin</classifier>
     <type>zip</type>
 </dependency>
