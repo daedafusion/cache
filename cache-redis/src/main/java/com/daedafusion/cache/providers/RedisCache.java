@@ -65,6 +65,15 @@ public class RedisCache implements Cache<String, String>
     }
 
     @Override
+    public void remove(String key)
+    {
+        try(Jedis jedis = pool.getResource())
+        {
+            jedis.del(key);
+        }
+    }
+
+    @Override
     public void close() throws IOException
     {
         // Closing of pool handled by manager

@@ -35,4 +35,6 @@ public interface Cache<K, V> extends Closeable
      * @return true if key is in cache
      */
     boolean contains(K key);
+
+    void remove(K key);
 }

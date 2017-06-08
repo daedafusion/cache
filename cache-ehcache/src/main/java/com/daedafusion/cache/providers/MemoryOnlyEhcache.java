@@ -101,6 +101,13 @@ public class MemoryOnlyEhcache<K, V> implements Cache<K, V>
     }
 
     @Override
+    public void remove(K key)
+    {
+        cache.remove(key);
+    }
+
+
+    @Override
     public void close() throws IOException
     {
         if(cache != null)
