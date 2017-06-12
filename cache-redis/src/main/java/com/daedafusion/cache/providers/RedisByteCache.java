@@ -6,68 +6,61 @@ import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
 import java.io.IOException;
-import java.nio.Buffer;
-import java.nio.ByteBuffer;
 
 /**
  * Created by mphilpot on 1/23/17.
  */
-public class RedisCache implements Cache<String, String>
+public class RedisByteCache implements Cache<byte[], byte[]>
 {
-    private static final Logger log = Logger.getLogger(RedisCache.class);
+    private static final Logger log = Logger.getLogger(RedisByteCache.class);
     private final JedisPool pool;
     private final String cacheName;
 
-    public RedisCache(JedisPool pool, String cacheName)
+    public RedisByteCache(JedisPool pool, String cacheName)
     {
         this.pool = pool;
         this.cacheName = cacheName;
     }
 
-    private String getPrefixedKey(String key)
-    {
-        return String.format("%s:%s", cacheName, key);
-    }
-
     @Override
-    public void put(String key, String value)
+    public void put(byte[] key, byte[] value)
     {
         try(Jedis jedis = pool.getResource())
         {
-            jedis.set(getPrefixedKey(key), value);
+            jedis.set(key, value);
         }
     }
 
     @Override
-    public void put(String key, String value, int ttl)
+    public void put(byte[] key, byte[] value, int ttl)
     {
         try(Jedis jedis = pool.getResource())
         {
-            jedis.set(getPrefixedKey(key), value);
-            jedis.expire(getPrefixedKey(key), ttl);
+            jedis.set(key, value);
+            jedis.expire(key, ttl);
         }
     }
 
     @Override
-    public String get(String key)
+    public byte[] get(byte[] key)
     {
         try(Jedis jedis = pool.getResource())
         {
-            return jedis.get(getPrefixedKey(key));
+            return jedis.get(key);
         }
     }
 
     @Override
-    public boolean contains(String key)
+    public boolean contains(byte[] key)
     {
         try(Jedis jedis = pool.getResource())
         {
-            return jedis.get(getPrefixedKey(key)) != null;
+            return jedis.get(key) != null;
         }
     }
 
     @Override
-    public void remove(String key)
+    public void remove(byte[] key)
     {
         try(Jedis jedis = pool.getResource())
         {
