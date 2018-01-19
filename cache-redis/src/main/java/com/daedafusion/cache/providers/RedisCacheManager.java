@@ -36,7 +36,7 @@ public class RedisCacheManager extends AbstractProvider implements CacheManagerP
             @Override
             public void start()
             {
-                pool = new JedisPool(new JedisPoolConfig(), Configuration.getInstance().getString("redis.hostname", "localhost"));
+                pool = new JedisPool(Configuration.getInstance().getString("redis.hostname", "localhost"));
             }
 
             @Override
