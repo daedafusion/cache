@@ -56,7 +56,14 @@ public class RedisCacheManager extends AbstractProvider implements CacheManagerP
     @Override
     public Cache getCache(String name)
     {
-        return new RedisCache(pool, name);
+        if(getProperty(String.format("%s.bytes", name)) != null)
+        {
+            return new RedisByteCache(pool, name);
+        }
+        else
+        {
+            return new RedisCache(pool, name);
+        }
     }
 
     @Override
