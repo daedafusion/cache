@@ -37,4 +37,6 @@ public interface Cache<K, V> extends Closeable
     boolean contains(K key);
 
     void remove(K key);
+
+    void removePattern(K key);
 }
