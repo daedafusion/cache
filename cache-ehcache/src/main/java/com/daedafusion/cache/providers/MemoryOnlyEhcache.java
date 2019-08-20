@@ -115,4 +115,9 @@ public class MemoryOnlyEhcache<K, V> implements Cache<K, V>
             cache.dispose();
         }
     }
+
+    @Override
+    public void removePattern(K key) {
+        throw new UnsupportedOperationException();
+    }
 }

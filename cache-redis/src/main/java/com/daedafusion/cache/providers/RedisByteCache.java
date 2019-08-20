@@ -73,4 +73,14 @@ public class RedisByteCache implements Cache<byte[], byte[]>
     {
         // Closing of pool handled by manager
     }
+
+
+    @Override
+    public void removePattern(byte[] key)
+    {
+        try(Jedis jedis = pool.getResource())
+        {
+            jedis.keys(key).forEach(jedis::del);
+        }
+    }
 }

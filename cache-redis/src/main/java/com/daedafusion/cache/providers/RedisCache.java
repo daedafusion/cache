@@ -71,7 +71,7 @@ public class RedisCache implements Cache<String, String>
     {
         try(Jedis jedis = pool.getResource())
         {
-            jedis.del(key);
+            jedis.del(getPrefixedKey(key));
         }
     }
 
@@ -79,5 +79,14 @@ public class RedisCache implements Cache<String, String>
     public void close() throws IOException
     {
         // Closing of pool handled by manager
+    }
+
+    @Override
+    public void removePattern(String key)
+    {
+        try(Jedis jedis = pool.getResource())
+        {
+            jedis.keys(getPrefixedKey(key)).forEach(jedis::del);
+        }
     }
 }
