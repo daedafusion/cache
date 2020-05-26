@@ -42,4 +42,15 @@ public class RedisIT {
 
         log.info(redis.get("a:b:c:22".getBytes()));
     }
+
+    @Test
+    public void emptyScan() {
+        JedisPool pool = new JedisPool();
+
+        RedisCache redis = new RedisCache(pool, "scanString");
+
+        redis.removePattern("a:b:c:*");
+
+        log.info(redis.get("a:b:c:11"));
+    }
 }

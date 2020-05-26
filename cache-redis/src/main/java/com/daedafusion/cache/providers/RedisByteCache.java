@@ -111,8 +111,11 @@ public class RedisByteCache implements Cache<byte[], byte[]>
             String cur = redis.clients.jedis.ScanParams.SCAN_POINTER_START;
             ScanResult<byte[]> scanResult = jedis.scan(cur.getBytes(), scanParams);
 
+            // Scan can be complete with results AND scan be ongoing with no results yet
             while(!scanResult.isCompleteIteration() || scanResult.getResult().size() > 0) {
-                jedis.unlink(scanResult.getResult().toArray(new byte[0][0]));
+                if(scanResult.getResult().size() > 0) {
+                    jedis.unlink(scanResult.getResult().toArray(new byte[0][0]));
+                }
                 scanResult = jedis.scan(scanResult.getCursor().getBytes());
             }
         }
