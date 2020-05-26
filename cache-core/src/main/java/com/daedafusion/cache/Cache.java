@@ -1,6 +1,7 @@
 package com.daedafusion.cache;
 
 import java.io.Closeable;
+import java.util.Set;
 
 /**
  * Created by mphilpot on 8/27/14.
@@ -37,6 +38,12 @@ public interface Cache<K, V> extends Closeable
     boolean contains(K key);
 
     void remove(K key);
+
+    void removeAsync(K key);
+
+    // Sets
+    void setAddItems(K key, V ...values);
+    Set<V> setGetMembers(K key);
 
     void removePattern(K key);
 }

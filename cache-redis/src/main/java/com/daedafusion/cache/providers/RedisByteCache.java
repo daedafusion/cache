@@ -4,8 +4,11 @@ import com.daedafusion.cache.Cache;
 import org.apache.log4j.Logger;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
+import redis.clients.jedis.ScanParams;
+import redis.clients.jedis.ScanResult;
 
 import java.io.IOException;
+import java.util.Set;
 
 /**
  * Created by mphilpot on 1/23/17.
@@ -69,6 +72,30 @@ public class RedisByteCache implements Cache<byte[], byte[]>
     }
 
     @Override
+    public void removeAsync(byte[] key) {
+        try(Jedis jedis = pool.getResource())
+        {
+            jedis.unlink(key);
+        }
+    }
+
+    @Override
+    public void setAddItems(byte[] key, byte[]... values) {
+        try(Jedis jedis = pool.getResource())
+        {
+            jedis.sadd(key, values);
+        }
+    }
+
+    @Override
+    public Set<byte[]> setGetMembers(byte[] key) {
+        try(Jedis jedis = pool.getResource())
+        {
+            return jedis.smembers(key);
+        }
+    }
+
+    @Override
     public void close() throws IOException
     {
         // Closing of pool handled by manager
@@ -80,7 +107,14 @@ public class RedisByteCache implements Cache<byte[], byte[]>
     {
         try(Jedis jedis = pool.getResource())
         {
-            jedis.keys(key).forEach(jedis::del);
+            ScanParams scanParams = new ScanParams().count(10).match(key);
+            String cur = redis.clients.jedis.ScanParams.SCAN_POINTER_START;
+            ScanResult<byte[]> scanResult = jedis.scan(cur.getBytes(), scanParams);
+
+            while(!scanResult.isCompleteIteration() || scanResult.getResult().size() > 0) {
+                jedis.unlink(scanResult.getResult().toArray(new byte[0][0]));
+                scanResult = jedis.scan(scanResult.getCursor().getBytes());
+            }
         }
     }
 }
