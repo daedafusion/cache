@@ -9,6 +9,7 @@ import net.sf.ehcache.config.PersistenceConfiguration;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -106,6 +107,20 @@ public class MemoryOnlyEhcache<K, V> implements Cache<K, V>
         cache.remove(key);
     }
 
+    @Override
+    public void removeAsync(K key) {
+        throw new UnsupportedOperationException("removeAsync");
+    }
+
+    @Override
+    public void setAddItems(K key, V... values) {
+        throw new UnsupportedOperationException("setAddItems");
+    }
+
+    @Override
+    public Set<V> setGetMembers(K key) {
+        throw new UnsupportedOperationException("setGetMembers");
+    }
 
     @Override
     public void close() throws IOException

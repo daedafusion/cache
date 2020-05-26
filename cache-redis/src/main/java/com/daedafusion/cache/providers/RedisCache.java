@@ -8,6 +8,7 @@ import redis.clients.jedis.JedisPool;
 import java.io.IOException;
 import java.nio.Buffer;
 import java.nio.ByteBuffer;
+import java.util.Set;
 
 /**
  * Created by mphilpot on 1/23/17.
@@ -76,6 +77,30 @@ public class RedisCache implements Cache<String, String>
     }
 
     @Override
+    public void removeAsync(String key) {
+        try(Jedis jedis = pool.getResource())
+        {
+            jedis.unlink(getPrefixedKey(key));
+        }
+    }
+
+    @Override
+    public void setAddItems(String key, String... values) {
+        try(Jedis jedis = pool.getResource())
+        {
+            jedis.sadd(getPrefixedKey(key), values);
+        }
+    }
+
+    @Override
+    public Set<String> setGetMembers(String key) {
+        try(Jedis jedis = pool.getResource())
+        {
+            return jedis.smembers(getPrefixedKey(key));
+        }
+    }
+
+    @Override
     public void close() throws IOException
     {
         // Closing of pool handled by manager
@@ -86,7 +111,7 @@ public class RedisCache implements Cache<String, String>
     {
         try(Jedis jedis = pool.getResource())
         {
-            jedis.keys(getPrefixedKey(key)).forEach(jedis::del);
+            jedis.keys(getPrefixedKey(key)).forEach(jedis::unlink);
         }
     }
 }

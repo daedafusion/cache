@@ -6,6 +6,7 @@ import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
 import java.io.IOException;
+import java.util.Set;
 
 /**
  * Created by mphilpot on 1/23/17.
@@ -69,6 +70,30 @@ public class RedisByteCache implements Cache<byte[], byte[]>
     }
 
     @Override
+    public void removeAsync(byte[] key) {
+        try(Jedis jedis = pool.getResource())
+        {
+            jedis.unlink(key);
+        }
+    }
+
+    @Override
+    public void setAddItems(byte[] key, byte[]... values) {
+        try(Jedis jedis = pool.getResource())
+        {
+            jedis.sadd(key, values);
+        }
+    }
+
+    @Override
+    public Set<byte[]> setGetMembers(byte[] key) {
+        try(Jedis jedis = pool.getResource())
+        {
+            return jedis.smembers(key);
+        }
+    }
+
+    @Override
     public void close() throws IOException
     {
         // Closing of pool handled by manager
@@ -80,7 +105,7 @@ public class RedisByteCache implements Cache<byte[], byte[]>
     {
         try(Jedis jedis = pool.getResource())
         {
-            jedis.keys(key).forEach(jedis::del);
+            jedis.keys(key).forEach(jedis::unlink);
         }
     }
 }
