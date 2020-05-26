@@ -4,6 +4,8 @@ import com.daedafusion.cache.Cache;
 import org.apache.log4j.Logger;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
+import redis.clients.jedis.ScanParams;
+import redis.clients.jedis.ScanResult;
 
 import java.io.IOException;
 import java.util.Set;
@@ -105,7 +107,14 @@ public class RedisByteCache implements Cache<byte[], byte[]>
     {
         try(Jedis jedis = pool.getResource())
         {
-            jedis.keys(key).forEach(jedis::unlink);
+            ScanParams scanParams = new ScanParams().count(10).match(key);
+            String cur = redis.clients.jedis.ScanParams.SCAN_POINTER_START;
+            ScanResult<byte[]> scanResult = jedis.scan(cur.getBytes(), scanParams);
+
+            while(!scanResult.isCompleteIteration() || scanResult.getResult().size() > 0) {
+                jedis.unlink(scanResult.getResult().toArray(new byte[0][0]));
+                scanResult = jedis.scan(scanResult.getCursor().getBytes());
+            }
         }
     }
 }
