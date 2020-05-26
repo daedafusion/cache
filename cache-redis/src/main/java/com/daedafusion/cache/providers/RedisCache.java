@@ -117,8 +117,11 @@ public class RedisCache implements Cache<String, String>
             String cur = redis.clients.jedis.ScanParams.SCAN_POINTER_START;
             ScanResult<String> scanResult = jedis.scan(cur, scanParams);
 
+            // Scan can be complete with results AND scan be ongoing with no results yet
             while(!scanResult.isCompleteIteration() || scanResult.getResult().size() > 0) {
-                jedis.unlink(scanResult.getResult().toArray(new String[0]));
+                if(scanResult.getResult().size() > 0) {
+                    jedis.unlink(scanResult.getResult().toArray(new String[0]));
+                }
                 scanResult = jedis.scan(scanResult.getCursor());
             }
         }
