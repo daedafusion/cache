@@ -116,7 +116,7 @@ public class RedisByteCache implements Cache<byte[], byte[]>
                 if(scanResult.getResult().size() > 0) {
                     jedis.unlink(scanResult.getResult().toArray(new byte[0][0]));
                 }
-                scanResult = jedis.scan(scanResult.getCursor().getBytes());
+                scanResult = jedis.scan(scanResult.getCursor().getBytes(), scanParams);
             }
         }
     }
