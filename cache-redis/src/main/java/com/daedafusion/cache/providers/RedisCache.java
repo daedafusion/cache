@@ -122,7 +122,7 @@ public class RedisCache implements Cache<String, String>
                 if(scanResult.getResult().size() > 0) {
                     jedis.unlink(scanResult.getResult().toArray(new String[0]));
                 }
-                scanResult = jedis.scan(scanResult.getCursor());
+                scanResult = jedis.scan(scanResult.getCursor(), scanParams);
             }
         }
     }

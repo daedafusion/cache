@@ -18,12 +18,16 @@ public class RedisIT {
         RedisCache redis = new RedisCache(pool, "scanString");
 
         IntStream.range(0, 20).forEach(i -> redis.put(String.format("a:b:c:%d", i), String.valueOf(i)));
+        redis.put("abcde", "123");
 
         log.info(redis.get("a:b:c:11"));
 
         redis.removePattern("a:b:c:*");
 
         log.info(redis.get("a:b:c:11"));
+
+        // Check we didn't delete everything
+        log.info(redis.get("abcde"));
     }
 
     @Test
