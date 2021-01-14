@@ -1,7 +1,8 @@
 package com.daedafusion.cache.providers;
 
 import com.daedafusion.cache.Cache;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.ScanParams;
@@ -17,7 +18,7 @@ import java.util.Set;
  */
 public class RedisCache implements Cache<String, String>
 {
-    private static final Logger log = Logger.getLogger(RedisCache.class);
+    private static final Logger log = LogManager.getLogger(RedisCache.class);
     private final JedisPool pool;
     private final String cacheName;
 

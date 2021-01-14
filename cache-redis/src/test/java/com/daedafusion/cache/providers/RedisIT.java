@@ -1,6 +1,8 @@
 package com.daedafusion.cache.providers;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import org.junit.Ignore;
 import org.junit.Test;
 import redis.clients.jedis.JedisPool;
@@ -9,7 +11,7 @@ import java.util.stream.IntStream;
 
 @Ignore
 public class RedisIT {
-    private static final Logger log = Logger.getLogger(RedisIT.class);
+    private static final Logger log = LogManager.getLogger(RedisIT.class);
 
     @Test
     public void testScanString() {
