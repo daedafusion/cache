@@ -5,7 +5,8 @@ import com.daedafusion.cache.CacheManager;
 import com.daedafusion.cache.providers.CacheManagerProvider;
 import com.daedafusion.sf.AbstractService;
 import com.daedafusion.sf.LifecycleListener;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,7 +16,7 @@ import java.util.Map;
  */
 public class CacheManagerImpl extends AbstractService<CacheManagerProvider> implements CacheManager
 {
-    private static final Logger log = Logger.getLogger(CacheManagerImpl.class);
+    private static final Logger log = LogManager.getLogger(CacheManagerImpl.class);
 
     private CacheManagerProvider defaultProvider;
     private final Map<String, CacheManagerProvider> cacheMap;

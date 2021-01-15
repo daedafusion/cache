@@ -4,7 +4,8 @@ import com.daedafusion.cache.Cache;
 import com.daedafusion.configuration.Configuration;
 import com.daedafusion.sf.AbstractProvider;
 import com.daedafusion.sf.LifecycleListener;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -15,7 +16,7 @@ import java.util.Map;
  */
 public class MemoryOnlyEhcacheManager extends AbstractProvider implements CacheManagerProvider
 {
-    private static final Logger log = Logger.getLogger(MemoryOnlyEhcacheManager.class);
+    private static final Logger log = LogManager.getLogger(MemoryOnlyEhcacheManager.class);
 
     private final Map<String, Cache> map;
 
